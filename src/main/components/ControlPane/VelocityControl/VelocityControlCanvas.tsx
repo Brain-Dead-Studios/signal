@@ -1,7 +1,7 @@
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { observer } from "mobx-react-lite"
-import { FC, useCallback, useMemo } from "react"
-import { containsPoint, IPoint } from "../../../../common/geometry"
+import React, { FC, useCallback, useMemo } from "react"
+import { IPoint, containsPoint } from "../../../../common/geometry"
 import { isNoteEvent } from "../../../../common/track"
 import { changeNotesVelocity } from "../../../actions"
 import { matrixFromTranslation } from "../../../helpers/matrix"
@@ -58,6 +58,7 @@ export const VelocityControlCanvas: FC<{ width: number; height: number }> =
           y: e.offsetY,
         }
         const hitItems = hitTest(local)
+        const isRightClick = e.button === 2
 
         if (hitItems.length === 0) {
           return
@@ -76,9 +77,23 @@ export const VelocityControlCanvas: FC<{ width: number; height: number }> =
 
         changeVelocity(noteIds, calcValue(e))
 
-        observeDrag({
-          onMouseMove: (e) => changeVelocity(noteIds, calcValue(e)),
-        })
+        if(isRightClick) {
+          observeDrag({
+            onMouseMove: (e) => {
+              const local = {
+                x: e.offsetX + scrollLeft,
+                y: e.offsetY,
+              }
+              const hitItems = hitTest(local)
+              const noteIds = hitItems.map((e) => e.id)
+              changeVelocity(noteIds, calcValue(e))
+            },
+          })
+        } else {
+          observeDrag({
+            onMouseMove: (e) => changeVelocity(noteIds, calcValue(e)),
+          })
+        }
       },
       [height, items, changeVelocity],
     )
