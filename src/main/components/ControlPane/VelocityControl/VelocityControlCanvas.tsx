@@ -60,7 +60,7 @@ export const VelocityControlCanvas: FC<{ width: number; height: number }> =
         const hitItems = hitTest(local)
         const isRightClick = e.button === 2
 
-        if (hitItems.length === 0) {
+        if (hitItems.length === 0 && !isRightClick) {
           return
         }
 
