@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import Add from "mdi-react/AddIcon"
+import RemoveIcon from "mdi-react/RemoveIcon"
 import { observer } from "mobx-react-lite"
 import { FC, useCallback } from "react"
 import { Localized } from "../../../components/Localized"
@@ -33,22 +34,24 @@ const Label = styled.div`
 export const BackingTrack: FC = observer(() => {
   const rootStore = useStores()
 
-  const song = rootStore.song
-
   const onClick = useCallback(() => {
-    if (song.backingTrack == null) {
+    if (rootStore.backingTrack == null) {
       openBackingTrack(rootStore);
     }else{
-      song.backingTrack = null;
+      rootStore.backingTrack = null;
     }
   }, [])
 
   return (
     <Wrapper onClick={onClick}>
-      <AddIcon />
+      {
+        rootStore.backingTrack == null ?
+        <AddIcon /> :
+        <RemoveIcon />
+      }
       <Label>
         {
-          song.backingTrack != null ?
+          rootStore.backingTrack != null ?
           <Localized default="Remove Backing Track">remove-backing-track</Localized> :  
           <Localized default="Add Backing Track">add-backing-track</Localized>
         }

@@ -66,8 +66,7 @@ export const openBackingTrack = async(rootStore: RootStore) => {
   const urlObj = URL.createObjectURL(file)
   const audio = new Audio(urlObj)
   
-  const song = rootStore.song
-  song.backingTrack = audio
+  rootStore.backingTrack = audio
 }
 
 export const songFromFile = async (file: File) => {

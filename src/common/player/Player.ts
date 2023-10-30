@@ -3,6 +3,7 @@ import throttle from "lodash/throttle"
 import { AnyEvent, MIDIControlEvents } from "midifile-ts"
 import { computed, makeObservable, observable } from "mobx"
 import { SendableEvent, SynthOutput } from "../../main/services/SynthOutput"
+import { BackingTrackStore } from "../../main/stores/BackingTrackStore"
 import { SongStore } from "../../main/stores/SongStore"
 import { filterEventsWithRange } from "../helpers/filterEvents"
 import { Beat, createBeatsInRange } from "../helpers/mapBeats"
@@ -32,6 +33,7 @@ export default class Player {
   private _currentTempo = DEFAULT_TEMPO
   private _scheduler: EventScheduler<PlayerEvent> | null = null
   private _songStore: SongStore
+  private _backingTrackStore: BackingTrackStore
   private _output: SynthOutput
   private _metronomeOutput: SynthOutput
   private _trackMute: ITrackMute
@@ -49,6 +51,7 @@ export default class Player {
     metronomeOutput: SynthOutput,
     trackMute: ITrackMute,
     songStore: SongStore,
+    backingTrackStore: BackingTrackStore = { backingTrack: null }
   ) {
     makeObservable<Player, "_currentTick" | "_isPlaying">(this, {
       _currentTick: observable,
@@ -63,6 +66,7 @@ export default class Player {
     this._metronomeOutput = metronomeOutput
     this._trackMute = trackMute
     this._songStore = songStore
+    this._backingTrackStore = backingTrackStore
   }
 
   private get song() {
@@ -71,6 +75,10 @@ export default class Player {
 
   private get timebase() {
     return this.song.timebase
+  }
+
+  private get backingTrack() {
+    return this._backingTrackStore.backingTrack
   }
 
   play() {
@@ -97,6 +105,11 @@ export default class Player {
       this.timebase,
       TIMER_INTERVAL + LOOK_AHEAD_TIME,
     )
+
+    if(this.backingTrack) {
+      this.backingTrack.currentTime = this._scheduler.absTickToMillisec(this._currentTick) / 1000;
+      this.backingTrack.play()
+    }
     this._isPlaying = true
     this._output.activate()
     this._interval = window.setInterval(() => this._onTimer(), TIMER_INTERVAL)
@@ -191,6 +204,10 @@ export default class Player {
       clearInterval(this._interval)
       this._interval = null
     }
+
+    if (this.backingTrack) {
+      this.backingTrack.pause()
+    }
   }
 
   reset() {
@@ -266,6 +283,18 @@ export default class Player {
     }
   }, 50)
 
+  prevPosition = 0
+  private syncBackingTrack = () => {
+    if(Math.floor(this.prevPosition / 480) !== Math.floor(this._currentTick / 480)) {
+      if(this._scheduler !== null && this.backingTrack) {
+        const targetTime = this._scheduler.absTickToMillisec(this._currentTick) / 1000
+        if(this.backingTrack.currentTime - targetTime > 0.1)
+          this.backingTrack.currentTime = targetTime;
+      }
+    }
+    this.prevPosition = this._currentTick;
+  }
+
   private applyPlayerEvent(
     e: DistributiveOmit<AnyEvent, "deltaTime" | "channel">,
   ) {
@@ -315,5 +344,6 @@ export default class Player {
     }
 
     this.syncPosition()
+    this.syncBackingTrack()
   }
 }

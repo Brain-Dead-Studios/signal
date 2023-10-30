@@ -24,6 +24,7 @@ import { registerReactions } from "./reactions"
 
 export default class RootStore {
   song: Song = emptySong()
+  backingTrack: HTMLAudioElement | null = null
   readonly router = new Router()
   readonly trackMute = new TrackMute()
   readonly historyStore = new HistoryStore<SerializedState>()
@@ -48,6 +49,7 @@ export default class RootStore {
   constructor() {
     makeObservable(this, {
       song: observable.ref,
+      backingTrack: observable.ref,
     })
 
     const context = new (window.AudioContext || window.webkitAudioContext)()
@@ -60,6 +62,7 @@ export default class RootStore {
       this.metronomeSynth,
       this.trackMute,
       this,
+      this
     )
     this.midiRecorder = new MIDIRecorder(this.player, this)
 

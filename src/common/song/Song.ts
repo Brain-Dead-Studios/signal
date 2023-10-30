@@ -28,7 +28,6 @@ export default class Song {
   firestoreReference: DocumentReference<FirestoreSong> | null = null
   firestoreDataReference: DocumentReference<FirestoreSongData> | null = null
   isSaved = true
-  backingTrack: HTMLAudioElement | null = null
 
   constructor() {
     makeObservable(this, {
