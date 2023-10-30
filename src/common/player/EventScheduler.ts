@@ -1,4 +1,6 @@
 import { DistributiveOmit } from "../types"
+import { DEFAULT_TEMPO } from "./Player"
+import { PlayerEvent } from "./PlayerEvent"
 
 export type SchedulableEvent = {
   tick: number
@@ -66,6 +68,25 @@ export default class EventScheduler<E extends SchedulableEvent> {
 
   tickToMillisec(tick: number, bpm: number) {
     return (tick / (this.timebase / 60) / bpm) * 1000
+  }
+
+  absTickToMillisec(tick: number): number {
+    let currentTempo = DEFAULT_TEMPO;
+    let currentTick = 0;
+    let millisec = 0;
+
+    const events = this._getEvents(0, tick) as unknown as PlayerEvent[];
+    for (const e of events) {
+      if (e.type !== "channel" && "subtype" in e && e.subtype == "setTempo") {
+        millisec += this.tickToMillisec(e.tick - currentTick, currentTempo);
+        currentTick = e.tick;
+        currentTempo = 60000000 / e.microsecondsPerBeat;
+      }
+    }
+
+    millisec += this.tickToMillisec(tick - currentTick, currentTempo);
+
+    return millisec;
   }
 
   seek(tick: number) {
