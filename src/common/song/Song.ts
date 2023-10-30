@@ -14,7 +14,7 @@ import { TIME_BASE } from "../../main/Constants"
 import { isNotUndefined } from "../helpers/array"
 import { Measure } from "../measure/Measure"
 import { getMeasuresFromConductorTrack } from "../measure/MeasureList"
-import { collectAllEvents, PlayerEvent } from "../player/PlayerEvent"
+import { PlayerEvent, collectAllEvents } from "../player/PlayerEvent"
 import Track from "../track"
 
 const END_MARGIN = 480 * 30
@@ -28,6 +28,7 @@ export default class Song {
   firestoreReference: DocumentReference<FirestoreSong> | null = null
   firestoreDataReference: DocumentReference<FirestoreSongData> | null = null
   isSaved = true
+  backingTrack: HTMLAudioElement | null = null
 
   constructor() {
     makeObservable(this, {

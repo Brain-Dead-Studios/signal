@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import { FC } from "react"
 import { useStores } from "../../hooks/useStores"
 import { AddTrackButton } from "./AddTrackButton"
+import { BackingTrack } from "./BackingTrack"
 import { TrackListItem } from "./TrackListItem"
 
 const List = styled.div`
@@ -17,6 +18,7 @@ export const TrackList: FC = observer(() => {
 
   return (
     <List>
+      <BackingTrack />
       {song.tracks.map(
         (t, i) => !t.isConductorTrack && <TrackListItem key={i} trackId={i} />,
       )}

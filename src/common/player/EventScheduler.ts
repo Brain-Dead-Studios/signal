@@ -70,12 +70,18 @@ export default class EventScheduler<E extends SchedulableEvent> {
     return (tick / (this.timebase / 60) / bpm) * 1000
   }
 
+  lastComputed = [0, 0];
   absTickToMillisec(tick: number): number {
     let currentTempo = DEFAULT_TEMPO;
     let currentTick = 0;
     let millisec = 0;
 
-    const events = this._getEvents(0, tick) as unknown as PlayerEvent[];
+    if(tick >= this.lastComputed[0]) {
+      currentTick = this.lastComputed[0];
+      millisec = this.lastComputed[1];
+    }
+
+    const events = this._getEvents(currentTick, tick) as unknown as PlayerEvent[];
     for (const e of events) {
       if (e.type !== "channel" && "subtype" in e && e.subtype == "setTempo") {
         millisec += this.tickToMillisec(e.tick - currentTick, currentTempo);
@@ -85,6 +91,8 @@ export default class EventScheduler<E extends SchedulableEvent> {
     }
 
     millisec += this.tickToMillisec(tick - currentTick, currentTempo);
+
+    this.lastComputed = [tick, millisec];
 
     return millisec;
   }
