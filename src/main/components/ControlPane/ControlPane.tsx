@@ -100,6 +100,18 @@ const Parent = styled.div`
   background: ${({ theme }) => theme.backgroundColor};
 `
 
+const VerticalSplit = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`
+
+const FixedWidth = styled.div`
+  width: 600px;
+  height: 100%;
+`
+
 const Content = styled.div`
   flex-grow: 1;
   position: relative;
@@ -141,10 +153,15 @@ const ControlPane: FC = observer(() => {
   })()
 
   return (
-    <Parent ref={ref}>
-      <TabBar onClick={onSelectTab} selectedMode={mode} />
-      <Content>{control}</Content>
-    </Parent>
+    <VerticalSplit>
+      <Parent ref={ref}>
+        <TabBar onClick={onSelectTab} selectedMode={mode} />
+        <Content>{control}</Content>
+      </Parent>
+      <FixedWidth>
+        <canvas style={{ width: "100%", height: "100%" }} />
+      </FixedWidth>
+    </VerticalSplit>
   )
 })
 
