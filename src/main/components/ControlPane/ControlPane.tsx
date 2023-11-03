@@ -9,6 +9,7 @@ import { ControlMode, isEqualControlMode } from "../../stores/ControlStore"
 import { ControlName } from "./ControlName"
 import { ValueEventGraph } from "./Graph/ValueEventGraph"
 import PianoVelocityControl from "./VelocityControl/VelocityControl"
+import ZombeatsCanvas from "./Zombeats/ZombeatsCanvas"
 
 interface TabBarProps {
   onClick: (mode: ControlMode) => void
@@ -130,7 +131,8 @@ const BORDER_WIDTH = 1
 const ControlPane: FC = observer(() => {
   const ref = useRef(null)
   const containerSize = useComponentSize(ref)
-  const { controlStore } = useStores()
+  const rootStore = useStores()
+  const { controlStore } = rootStore
   const { controlMode: mode } = controlStore
 
   const onSelectTab = useCallback(
@@ -159,7 +161,7 @@ const ControlPane: FC = observer(() => {
         <Content>{control}</Content>
       </Parent>
       <FixedWidth>
-        <canvas style={{ width: "100%", height: "100%" }} />
+        <ZombeatsCanvas rootStore={rootStore} style={{ width: "100%" }} />
       </FixedWidth>
     </VerticalSplit>
   )

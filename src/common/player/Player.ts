@@ -51,7 +51,7 @@ export default class Player {
     metronomeOutput: SynthOutput,
     trackMute: ITrackMute,
     songStore: SongStore,
-    backingTrackStore: BackingTrackStore = { backingTrack: null }
+    backingTrackStore: BackingTrackStore = { backingTrack: null },
   ) {
     makeObservable<Player, "_currentTick" | "_isPlaying">(this, {
       _currentTick: observable,
@@ -106,8 +106,9 @@ export default class Player {
       TIMER_INTERVAL + LOOK_AHEAD_TIME,
     )
 
-    if(this.backingTrack) {
-      this.backingTrack.currentTime = this._scheduler.absTickToMillisec(this._currentTick) / 1000;
+    if (this.backingTrack) {
+      this.backingTrack.currentTime =
+        this._scheduler.absTickToMillisec(this._currentTick) / 1000
       this.backingTrack.play()
     }
     this._isPlaying = true
@@ -285,14 +286,18 @@ export default class Player {
 
   prevPosition = 0
   private syncBackingTrack = () => {
-    if(Math.floor(this.prevPosition / 480) !== Math.floor(this._currentTick / 480)) {
-      if(this._scheduler !== null && this.backingTrack) {
-        const targetTime = this._scheduler.absTickToMillisec(this._currentTick) / 1000
-        if(this.backingTrack.currentTime - targetTime > 0.1)
-          this.backingTrack.currentTime = targetTime;
+    if (
+      Math.floor(this.prevPosition / 480) !==
+      Math.floor(this._currentTick / 480)
+    ) {
+      if (this._scheduler !== null && this.backingTrack) {
+        const targetTime =
+          this._scheduler.absTickToMillisec(this._currentTick) / 1000
+        if (this.backingTrack.currentTime - targetTime > 0.1)
+          this.backingTrack.currentTime = targetTime
       }
     }
-    this.prevPosition = this._currentTick;
+    this.prevPosition = this._currentTick
   }
 
   private applyPlayerEvent(

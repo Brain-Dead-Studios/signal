@@ -83,6 +83,7 @@ function drawKeys(
   numberOfKeys: number,
   theme: Theme,
   touchingKeys: number[],
+  startKey: number,
 ) {
   ctx.save()
   ctx.translate(0, 0.5)
@@ -98,10 +99,10 @@ function drawKeys(
 
   // 0: white, 1: black
   const colors = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0]
-  for (let i = 0; i < numberOfKeys; i++) {
+  for (let i = startKey; i < numberOfKeys + startKey; i++) {
     const isBlack = colors[i % colors.length] !== 0
     const bordered = i % 12 === 4 || i % 12 === 11
-    const y = (numberOfKeys - i - 1) * keyHeight
+    const y = (numberOfKeys + startKey - i - 1) * keyHeight
     ctx.save()
     ctx.translate(0, y)
 
@@ -146,9 +147,14 @@ function drawKeys(
 export interface PianoKeysProps {
   numberOfKeys: number
   keyHeight: number
+  startKey: number
 }
 
-const PianoKeys: FC<PianoKeysProps> = ({ numberOfKeys, keyHeight }) => {
+const PianoKeys: FC<PianoKeysProps> = ({
+  numberOfKeys,
+  keyHeight,
+  startKey,
+}) => {
   const theme = useTheme()
   const rootStore = useStores()
   const width = Layout.keyWidth
@@ -156,15 +162,23 @@ const PianoKeys: FC<PianoKeysProps> = ({ numberOfKeys, keyHeight }) => {
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      drawKeys(ctx, width, keyHeight, numberOfKeys, theme, touchingKeys)
+      drawKeys(
+        ctx,
+        width,
+        keyHeight,
+        numberOfKeys,
+        theme,
+        touchingKeys,
+        startKey,
+      )
     },
-    [keyHeight, numberOfKeys, theme, touchingKeys],
+    [keyHeight, numberOfKeys, theme, touchingKeys, startKey],
   )
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
       function pixelsToNoteNumber(y: number): number {
-        return numberOfKeys - y / keyHeight
+        return numberOfKeys + startKey - y / keyHeight
       }
 
       const startPosition = {

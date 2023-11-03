@@ -50,6 +50,7 @@ export const PianoRollStage: FC<PianoRollStageProps> = observer(
           <PianoKeys
             keyHeight={transform.pixelsPerKey}
             numberOfKeys={transform.numberOfKeys}
+            startKey={0}
           />
         </PianoKeyPosition>
         <RulerPosition
