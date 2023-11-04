@@ -1,9 +1,8 @@
-import CloudOutlined from "mdi-react/CloudOutlineIcon"
 import KeyboardArrowDown from "mdi-react/KeyboardArrowDownIcon"
 import { observer } from "mobx-react-lite"
 import { FC, useCallback, useRef } from "react"
 import { Localized } from "../../../components/Localized"
-import { Menu, MenuDivider, MenuItem } from "../../../components/Menu"
+import { Menu } from "../../../components/Menu"
 import { hasFSAccess } from "../../actions/file"
 import { useStores } from "../../hooks/useStores"
 import { CloudFileMenu } from "./CloudFileMenu"
@@ -51,7 +50,7 @@ export const FileMenuButton: FC = observer(() => {
 
       {user && <CloudFileMenu close={handleClose} />}
 
-      {user === null && (
+      {/* {user === null && (
         <>
           <MenuDivider />
           <MenuItem
@@ -66,13 +65,13 @@ export const FileMenuButton: FC = observer(() => {
             </Localized>
           </MenuItem>
         </>
-      )}
+      )} */}
 
-      <MenuDivider />
+      {/* <MenuDivider />
 
       <MenuItem onClick={onClickExport}>
         <Localized default="Export Audio">export-audio</Localized>
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
   )
 })

@@ -1,5 +1,8 @@
 import { isNotNull } from "../../common/helpers/array"
-import { downloadSongAsMidi } from "../../common/midi/midiConversion"
+import {
+  downloadSongAsBeatmap,
+  downloadSongAsMidi,
+} from "../../common/midi/midiConversion"
 import Song, { emptySong } from "../../common/song"
 import { emptyTrack, isNoteEvent } from "../../common/track"
 import { clampNoteNumber } from "../../common/transform/NotePoint"
@@ -47,6 +50,11 @@ export const saveSong = (rootStore: RootStore) => () => {
   const { song } = rootStore
   song.isSaved = true
   downloadSongAsMidi(song)
+}
+
+export const saveBeatmap = (rootStore: RootStore) => () => {
+  const { song } = rootStore
+  downloadSongAsBeatmap(song)
 }
 
 export const openSong =

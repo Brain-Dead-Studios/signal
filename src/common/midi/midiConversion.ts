@@ -17,6 +17,7 @@ import {
   tickedEventsToTrackEvents,
   toTrackEvents,
 } from "../helpers/toTrackEvents"
+import { DEFAULT_TEMPO } from "../player"
 import Song from "../song"
 import Track, { AnyEventFeature } from "../track"
 
@@ -163,8 +164,59 @@ export function songToMidi(song: Song) {
   return writeMidiFile(rawTracks, song.timebase)
 }
 
+function tickToMillisec(tick: number, bpm: number) {
+  return (tick / (480 / 60) / bpm) * 1000
+}
+
+export function songToBeatmap(song: Song) {
+  const events = song.allEvents
+  let currentTempo = DEFAULT_TEMPO
+  let currentTick = 0
+  let millisec = 0
+
+  let res = []
+
+  let lastNoteOn = new Map<Number, any>()
+
+  for (const e of events) {
+    millisec += tickToMillisec(e.tick - currentTick, currentTempo)
+    currentTick = e.tick
+    const eventTime = millisec / 1000
+    if (e.type !== "channel" && "subtype" in e && e.subtype == "setTempo") {
+      currentTempo = 60000000 / e.microsecondsPerBeat
+    }
+
+    if ("subtype" in e && e.subtype == "noteOn") {
+      let event = {
+        type: e.noteNumber,
+        position: e.velocity,
+        time: eventTime,
+      }
+      res.push(event)
+      lastNoteOn.set(e.noteNumber, event)
+    }
+
+    if ("subtype" in e && e.subtype == "noteOff") {
+      const duration = eventTime - lastNoteOn.get(e.noteNumber).time
+      lastNoteOn.get(e.noteNumber).duration = duration
+      lastNoteOn.delete(e.noteNumber)
+    }
+  }
+
+  return res
+}
+
 export function downloadSongAsMidi(song: Song) {
   const bytes = songToMidi(song)
   const blob = new Blob([bytes], { type: "application/octet-stream" })
   downloadBlob(blob, song.filepath.length > 0 ? song.filepath : "no name.mid")
+}
+
+export function downloadSongAsBeatmap(song: Song) {
+  const beatmap = songToBeatmap(song)
+  const json = JSON.stringify(beatmap)
+  const jsonBytes = new Uint8Array(json.split("").map((a) => a.charCodeAt(0)))
+  const jsonBlob = new Blob([jsonBytes], { type: "application/octet-stream" })
+
+  downloadBlob(jsonBlob, "beatmap.json")
 }

@@ -1,4 +1,4 @@
-import { ControllerEvent, MIDIControlEvents, PitchBendEvent } from "midifile-ts"
+import { ControllerEvent, PitchBendEvent } from "midifile-ts"
 import { computed, makeObservable, observable } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 import {
@@ -40,29 +40,29 @@ export class ControlStore {
     {
       type: "velocity",
     },
-    {
-      type: "pitchBend",
-    },
-    {
-      type: "controller",
-      controllerType: MIDIControlEvents.MSB_MAIN_VOLUME,
-    },
-    {
-      type: "controller",
-      controllerType: MIDIControlEvents.MSB_PAN,
-    },
-    {
-      type: "controller",
-      controllerType: MIDIControlEvents.MSB_EXPRESSION,
-    },
-    {
-      type: "controller",
-      controllerType: MIDIControlEvents.SUSTAIN,
-    },
-    {
-      type: "controller",
-      controllerType: MIDIControlEvents.MSB_MODWHEEL,
-    },
+    // {
+    //   type: "pitchBend",
+    // },
+    // {
+    //   type: "controller",
+    //   controllerType: MIDIControlEvents.MSB_MAIN_VOLUME,
+    // },
+    // {
+    //   type: "controller",
+    //   controllerType: MIDIControlEvents.MSB_PAN,
+    // },
+    // {
+    //   type: "controller",
+    //   controllerType: MIDIControlEvents.MSB_EXPRESSION,
+    // },
+    // {
+    //   type: "controller",
+    //   controllerType: MIDIControlEvents.SUSTAIN,
+    // },
+    // {
+    //   type: "controller",
+    //   controllerType: MIDIControlEvents.MSB_MODWHEEL,
+    // },
   ]
 
   constructor(private readonly pianoRollStore: PianoRollStore) {

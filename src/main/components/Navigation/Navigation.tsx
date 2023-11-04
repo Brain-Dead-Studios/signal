@@ -1,8 +1,6 @@
 import styled from "@emotion/styled"
 import Color from "color"
-import Forum from "mdi-react/ForumIcon"
 import Help from "mdi-react/HelpCircleIcon"
-import Settings from "mdi-react/SettingsIcon"
 import { observer } from "mobx-react-lite"
 import { CSSProperties, FC, useCallback } from "react"
 import { envString } from "../../../common/localize/envString"
@@ -14,7 +12,6 @@ import PianoIcon from "../../images/icons/piano.svg"
 import TempoIcon from "../../images/icons/tempo.svg"
 import Logo from "../../images/logo-circle.svg"
 import { FileMenuButton } from "./FileMenuButton"
-import { UserButton } from "./UserButton"
 
 const BannerContainer = styled.div`
   background: ${({ theme }) => theme.themeColor};
@@ -159,7 +156,7 @@ export const Navigation: FC = observer(() => {
 
       <FlexibleSpacer />
 
-      <Tab
+      {/* <Tab
         onClick={useCallback(
           () => (rootViewStore.openSettingDialog = true),
           [],
@@ -169,7 +166,7 @@ export const Navigation: FC = observer(() => {
         <TabTitle>
           <Localized default="Settings">settings</Localized>
         </TabTitle>
-      </Tab>
+      </Tab> */}
 
       <Tab onClick={useCallback(() => (rootViewStore.openHelp = true), [])}>
         <Help style={IconStyle} />
@@ -178,16 +175,16 @@ export const Navigation: FC = observer(() => {
         </TabTitle>
       </Tab>
 
-      <Tab>
+      {/* <Tab>
         <Forum style={IconStyle} />
         <TabTitle>
           <a href="https://discord.gg/XQxzNdDJse" target="_blank">
             Discord
           </a>
         </TabTitle>
-      </Tab>
+      </Tab> */}
 
-      <UserButton />
+      {/* <UserButton /> */}
     </Container>
   )
 })

@@ -1,6 +1,5 @@
 import styled from "@emotion/styled"
 import useComponentSize from "@rehooks/component-size"
-import DotsHorizontalIcon from "mdi-react/DotsHorizontalIcon"
 import { observer } from "mobx-react-lite"
 import React, { FC, useCallback, useRef } from "react"
 import { Layout } from "../../Constants"
@@ -69,6 +68,7 @@ const TabBar: FC<TabBarProps> = React.memo(
   observer(({ onClick, selectedMode }) => {
     const { controlStore, rootViewStore } = useStores()
     const { controlModes } = controlStore
+    console.log(controlModes)
 
     return (
       <Toolbar>
@@ -83,11 +83,11 @@ const TabBar: FC<TabBarProps> = React.memo(
             </NoWrap>
           </TabButton>
         ))}
-        <TabButtonBase
+        {/* <TabButtonBase
           onClick={() => (rootViewStore.openControlSettingDialog = true)}
         >
           <DotsHorizontalIcon style={{ width: "1rem" }} />
-        </TabButtonBase>
+        </TabButtonBase> */}
       </Toolbar>
     )
   }),

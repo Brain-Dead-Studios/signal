@@ -6,7 +6,7 @@ import { ControlMode } from "../../stores/ControlStore"
 export const ControlName: FC<{ mode: ControlMode }> = ({ mode }) => {
   switch (mode.type) {
     case "velocity":
-      return <Localized default="Velocity">velocity</Localized>
+      return <Localized default="Zombie Position">zombie-position</Localized>
     case "pitchBend":
       return <Localized default="Pitch Bend">pitch-bend</Localized>
     case "controller":
