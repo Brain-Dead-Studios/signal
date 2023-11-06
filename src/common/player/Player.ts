@@ -9,8 +9,7 @@ import { filterEventsWithRange } from "../helpers/filterEvents"
 import { Beat, createBeatsInRange } from "../helpers/mapBeats"
 import {
   controllerMidiEvent,
-  noteOffMidiEvent,
-  noteOnMidiEvent,
+  noteOnMidiEvent
 } from "../midi/MidiEvent"
 import { getStatusEvents } from "../track/selector"
 import { ITrackMute } from "../trackMute/ITrackMute"
@@ -253,7 +252,7 @@ export default class Player {
     delayTime = 0,
   ) {
     this._output.activate()
-    this.sendEvent(noteOnMidiEvent(0, channel, noteNumber, velocity), delayTime)
+    //this.sendEvent(noteOnMidiEvent(0, channel, noteNumber, velocity), delayTime)
   }
 
   stopNote(
@@ -266,7 +265,7 @@ export default class Player {
     },
     delayTime = 0,
   ) {
-    this.sendEvent(noteOffMidiEvent(0, channel, noteNumber, 0), delayTime)
+    //this.sendEvent(noteOffMidiEvent(0, channel, noteNumber, 0), delayTime)
   }
 
   // delayTime: seconds, timestampNow: milliseconds
@@ -275,7 +274,7 @@ export default class Player {
     delayTime: number = 0,
     timestampNow: number = performance.now(),
   ) {
-    this._output.sendEvent(event, delayTime, timestampNow)
+    //this._output.sendEvent(event, delayTime, timestampNow)
   }
 
   private syncPosition = throttle(() => {

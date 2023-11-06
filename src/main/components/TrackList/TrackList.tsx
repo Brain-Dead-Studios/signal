@@ -2,7 +2,6 @@ import styled from "@emotion/styled"
 import { observer } from "mobx-react-lite"
 import { FC } from "react"
 import { useStores } from "../../hooks/useStores"
-import { AddTrackButton } from "./AddTrackButton"
 import { BackingTrack } from "./BackingTrack"
 import { TrackListItem } from "./TrackListItem"
 
@@ -22,7 +21,7 @@ export const TrackList: FC = observer(() => {
       {song.tracks.map(
         (t, i) => !t.isConductorTrack && <TrackListItem key={i} trackId={i} />,
       )}
-      <AddTrackButton />
+      {/* <AddTrackButton /> */}
     </List>
   )
 })
